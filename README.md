@@ -18,8 +18,9 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
 ## Prerequisites
 - **Python**: 3.8 or higher.
 - **Azure App Registration**:
-  - Permissions (Application): `User.Read.All`, `MailboxSettings.ReadWrite`, `Directory.Read.All`.
-  - Client Secret or Certificate.
+  - **Platform**: Add 'Mobile and desktop applications' with redirect URI `http://localhost`.
+  - **Permissions (Delegated)**: `User.Read.All`, `MailboxSettings.ReadWrite`, `Directory.Read.All`.
+  - **Type**: Public Client (No Client Secret required).
 
 ## Setup
 1. **Install Dependencies**:
@@ -31,10 +32,10 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
    {
        "TenantId": "YOUR_TENANT_ID",
        "AppId": "YOUR_APP_ID",
-       "ClientSecret": "YOUR_CLIENT_SECRET",
        "TemplatePath": "src/Templates/OOO-Template.html"
    }
    ```
+   *Note: No `ClientSecret` is needed for interactive login.*
 3. **Template**: Customize `src/Templates/OOO-Template.html`.
 
 ## Usage
