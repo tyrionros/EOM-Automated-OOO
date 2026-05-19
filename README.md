@@ -14,13 +14,19 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
 - `src/Templates/`: HTML templates for the OOO messages.
 - `src/Config/settings.json`: Configuration for Tenant ID, App ID, and paths.
 
+## Prerequisites
+- **PowerShell**: Version 7.0 or higher is recommended for better performance and compatibility.
+- **Modules**:
+  - `ExchangeOnlineManagement`: Required for connecting to and managing Exchange Online settings.
+
 ## Setup
-1. **Exchange Online PowerShell**: Ensure you have the `ExchangeOnlineManagement` module installed.
+1. **Install Required Modules**:
+   Run the following command in an administrative PowerShell session:
    ```powershell
-   Install-Module -Name ExchangeOnlineManagement
+   Install-Module -Name ExchangeOnlineManagement -Force
    ```
 2. **Configuration**: Update `src/Config/settings.json` with your Tenant ID. If running unattended, provide `AppId` and `CertificateThumbprint`.
-3. **Template**: Customize `src/Templates/OOO-Template.html` to match your corporate branding. Use `{{DisplayName}}` as a placeholder for the user's name.
+3. **Template**: Customize `src/Templates/OOO-Template.html` to match your corporate branding.
 
 ## Usage
 Run the main script:
