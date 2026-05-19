@@ -10,8 +10,8 @@ def get_users_with_ooo(access_token):
     headers = {"Authorization": f"Bearer {access_token}"}
     all_users = []
     
-    # Fetch first page of users
-    url = f"{GRAPH_URL}/users?$select=id,displayName,userPrincipalName"
+    # Fetch first page of users (Filtering for 'Member' to focus on User Mailboxes)
+    url = f"{GRAPH_URL}/users?$filter=userType eq 'Member'&$select=id,displayName,userPrincipalName"
     
     while url:
         response = requests.get(url, headers=headers)
