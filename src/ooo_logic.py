@@ -33,11 +33,14 @@ def get_users_with_ooo(access_token):
     active_ooo_users = []
     print(f"Checking OOO status for {len(all_users)} users...")
 
+    # Headers for individual checks (doesn't need ConsistencyLevel)
+    simple_headers = {"Authorization": f"Bearer {access_token}"}
+
     for user in all_users:
         user_id = user['id']
         # Fetch mailbox settings individually for this user
         settings_url = f"{GRAPH_URL}/users/{user_id}/mailboxSettings"
-        settings_resp = requests.get(settings_url, headers=headers)
+        settings_resp = requests.get(settings_url, headers=simple_headers)
         
         if settings_resp.status_code == 200:
             mailbox_settings = settings_resp.json()
