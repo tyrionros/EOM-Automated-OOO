@@ -5,25 +5,41 @@ GRAPH_URL = "https://graph.microsoft.com/v1.0"
 def get_users_with_ooo(access_token):
     """
     Fetches users who have an active or scheduled Out-of-Office status.
-    Requires MailboxSettings.Read permission.
+    Fetches settings individually to avoid errors on users without mailboxes.
     """
     headers = {"Authorization": f"Bearer {access_token}"}
-    # We fetch all users and their mailbox settings. 
-    # Note: In large tenants, you would use $filter or pagination.
-    url = f"{GRAPH_URL}/users?$select=id,displayName,userPrincipalName,mailboxSettings"
+    # Fetch all users (basic info only first)
+    url = f"{GRAPH_URL}/users?$select=id,displayName,userPrincipalName"
     response = requests.get(url, headers=headers)
     
     if response.status_code != 200:
         print(f"Error fetching users: {response.text}")
         return []
 
-    users = response.json().get("value", [])
+    all_users = response.json().get("value", [])
     active_ooo_users = []
 
-    for user in users:
-        mailbox_settings = user.get("mailboxSettings")
-        if mailbox_settings and mailbox_settings.get("automaticRepliesSetting", {}).get("status") != "disabled":
-            active_ooo_users.append(user)
+    print(f"Checking OOO status for {len(all_users)} users...")
+
+    for user in all_users:
+        user_id = user['id']
+        # Fetch mailbox settings individually for this user
+        settings_url = f"{GRAPH_URL}/users/{user_id}/mailboxSettings"
+        settings_resp = requests.get(settings_url, headers=headers)
+        
+        if settings_resp.status_code == 200:
+            mailbox_settings = settings_resp.json()
+            status = mailbox_settings.get("automaticRepliesSetting", {}).get("status")
+            if status and status != "disabled":
+                # Attach settings to the user object for main.py to use
+                user['mailboxSettings'] = mailbox_settings
+                active_ooo_users.append(user)
+        elif settings_resp.status_code == 404 or settings_resp.status_code == 400:
+            # Likely no mailbox or invalid ID for mailbox purposes (e.g. Guest)
+            continue
+        else:
+            # Log other errors but keep going
+            print(f"Warning: Could not check settings for {user.get('userPrincipalName')}: {settings_resp.status_code}")
             
     return active_ooo_users
 
