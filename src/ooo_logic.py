@@ -5,20 +5,27 @@ GRAPH_URL = "https://graph.microsoft.com/v1.0"
 def get_users_with_ooo(access_token):
     """
     Fetches users who have an active or scheduled Out-of-Office status.
-    Fetches settings individually to avoid errors on users without mailboxes.
+    Handles pagination to fetch all users and checks settings individually.
     """
     headers = {"Authorization": f"Bearer {access_token}"}
-    # Fetch all users (basic info only first)
-    url = f"{GRAPH_URL}/users?$select=id,displayName,userPrincipalName"
-    response = requests.get(url, headers=headers)
+    all_users = []
     
-    if response.status_code != 200:
-        print(f"Error fetching users: {response.text}")
-        return []
+    # Fetch first page of users
+    url = f"{GRAPH_URL}/users?$select=id,displayName,userPrincipalName"
+    
+    while url:
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            print(f"Error fetching users: {response.text}")
+            break
+            
+        data = response.json()
+        all_users.extend(data.get("value", []))
+        
+        # Check if there's a next page
+        url = data.get("@odata.nextLink")
 
-    all_users = response.json().get("value", [])
     active_ooo_users = []
-
     print(f"Checking OOO status for {len(all_users)} users...")
 
     for user in all_users:
