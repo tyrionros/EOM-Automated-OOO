@@ -1,40 +1,47 @@
-# OOO Automated Template Enforcement
+# OOO Automated Template Enforcement (Python)
 
-This project automates the application of a standardized Out-of-Office (OOO) template for Exchange Online users. When a user enables their auto-reply, this script detects it and applies a corporate-branded HTML template.
+This project automates the application of a standardized Out-of-Office (OOO) template for Microsoft 365 users using the Microsoft Graph API.
 
 ## Features
-- **Automatic Detection**: Identifies users with active or scheduled auto-replies.
+- **Automatic Detection**: Identifies users with active or scheduled auto-replies via Graph API.
 - **Template Enforcement**: Replaces user-defined messages with a standardized HTML template.
+- **Manager Details**: Dynamically fetches the user's manager's name and email.
 - **Smart Skipping**: Uses a hidden marker in the HTML to avoid redundant updates.
-- **Flexible Authentication**: Supports both interactive login and Certificate-based authentication (unattended).
 
 ## Project Structure
-- `src/Main.ps1`: The entry point for the automation.
-- `src/Functions/`: Modular PowerShell functions for EXO connection, status checking, and template setting.
+- `src/main.py`: The entry point for the automation.
+- `src/graph_auth.py`: Authentication logic using MSAL.
+- `src/ooo_logic.py`: Functions for interacting with Microsoft Graph.
 - `src/Templates/`: HTML templates for the OOO messages.
 - `src/Config/settings.json`: Configuration for Tenant ID, App ID, and paths.
 
 ## Prerequisites
-- **PowerShell**: Version 7.0 or higher is recommended for better performance and compatibility.
-- **Modules**:
-  - `ExchangeOnlineManagement`: Required for connecting to and managing Exchange Online settings.
+- **Python**: 3.8 or higher.
+- **Azure App Registration**:
+  - Permissions (Application): `User.Read.All`, `MailboxSettings.ReadWrite`, `Directory.Read.All`.
+  - Client Secret or Certificate.
 
 ## Setup
-1. **Install Required Modules**:
-   Run the following command in an administrative PowerShell session:
-   ```powershell
-   Install-Module -Name ExchangeOnlineManagement -Force
+1. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
    ```
-2. **Configuration**: Update `src/Config/settings.json` with your Tenant ID. If running unattended, provide `AppId` and `CertificateThumbprint`.
-3. **Template**: Customize `src/Templates/OOO-Template.html` to match your corporate branding.
+2. **Configuration**: Update `src/Config/settings.json`.
+   ```json
+   {
+       "TenantId": "YOUR_TENANT_ID",
+       "AppId": "YOUR_APP_ID",
+       "ClientSecret": "YOUR_CLIENT_SECRET",
+       "TemplatePath": "src/Templates/OOO-Template.html"
+   }
+   ```
+3. **Template**: Customize `src/Templates/OOO-Template.html`.
 
 ## Usage
 Run the main script:
-```powershell
-pwsh src/Main.ps1
+```bash
+python src/main.py
 ```
 
 ## Scheduling
-To apply the template "the moment they set themselves as out of office," it is recommended to run this script as a Scheduled Task (Windows) or a Cron Job (Linux/macOS) every 5-15 minutes.
-
-Alternatively, consider using an Azure Automation Runbook for a cloud-native scheduled execution.
+It is recommended to run this script as a Cron Job or an Azure Function every 15 minutes.
