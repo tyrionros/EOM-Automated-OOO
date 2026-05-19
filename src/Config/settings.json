@@ -1,0 +1,8 @@
+{
+    "TenantId": "ead65215-ebfd-4a8d-9e73-b403a85a7e04",
+    "AppId": "",
+    "CertificateThumbprint": "",
+    "TemplatePath": "src/Templates/OOO-Template.html",
+    "LoggingEnabled": true,
+    "LogPath": "logs/ooo-automation.log"
+}
