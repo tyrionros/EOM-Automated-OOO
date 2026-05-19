@@ -18,11 +18,9 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
 ## Prerequisites
 - **Python**: 3.8 or higher.
 - **Azure App Registration**:
-  - **Platform**: Click '+ Add a platform', then select **'Mobile and desktop applications'**.
-  - **Redirect URI**: Select `http://localhost`.
-  - **Important**: Do **NOT** use the 'Single-page application' (SPA) platform, as it will cause authentication errors with this script.
-  - **Permissions (Delegated)**: `User.Read.All`, `MailboxSettings.ReadWrite`, `Directory.Read.All`.
-  - **Type**: Ensure 'Allow public client flows' is set to **Yes**.
+  - **Permissions (Application)**: `User.Read.All`, `MailboxSettings.ReadWrite`, `Directory.Read.All`.
+  - **Note**: Application permissions are **required** to manage other users' mailbox settings. Delegated permissions (Interactive login) only allow managing your own mailbox.
+  - **Client Secret**: Generate a Client Secret in 'Certificates & secrets'.
 
 ## Setup
 1. **Install Dependencies**:
@@ -34,10 +32,11 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
    {
        "TenantId": "YOUR_TENANT_ID",
        "AppId": "YOUR_APP_ID",
+       "ClientSecret": "YOUR_CLIENT_SECRET",
        "TemplatePath": "src/Templates/OOO-Template.html"
    }
    ```
-   *Note: No `ClientSecret` is needed for interactive login.*
+
 3. **Template**: Customize `src/Templates/OOO-Template.html`.
 
 ## Usage
