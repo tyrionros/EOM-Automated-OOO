@@ -20,6 +20,7 @@ function Get-UsersWithOOO {
                     AutoReplyState    = $config.AutoReplyState
                     InternalMessage   = $config.InternalMessage
                     ExternalMessage   = $config.ExternalMessage
+                    EndTime           = $config.EndTime
                 }
             }
         } else {
@@ -29,6 +30,7 @@ function Get-UsersWithOOO {
                 AutoReplyState    = $config.AutoReplyState
                 InternalMessage   = $config.InternalMessage
                 ExternalMessage   = $config.ExternalMessage
+                EndTime           = $config.EndTime
             }
         }
     }

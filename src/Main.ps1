@@ -28,10 +28,17 @@ Connect-EXO -TenantId $config.TenantId -AppId $config.AppId -CertificateThumbpri
 $usersOOO = Get-UsersWithOOO -ActiveOnly
 
 foreach ($user in $usersOOO) {
+    $manager = Get-UserManager -UserEmail $user.UserPrincipalName
+    $managerName = if ($manager) { $manager.DisplayName } else { "your supervisor" }
+    $managerEmail = if ($manager) { $manager.PrimarySmtpAddress } else { "N/A" }
+
     Set-UserOOOTemplate -UserEmail $user.UserPrincipalName `
                         -DisplayName $user.DisplayName `
+                        -ManagerName $managerName `
+                        -ManagerEmail $managerEmail `
                         -TemplatePath $config.TemplatePath `
-                        -CurrentInternalMessage $user.InternalMessage
+                        -CurrentInternalMessage $user.InternalMessage `
+                        -ReturnDate $user.EndTime
 }
 
 Write-Host "OOO Automation completed." -ForegroundColor Green
