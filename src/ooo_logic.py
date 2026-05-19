@@ -7,12 +7,16 @@ def get_users_with_ooo(access_token):
     Fetches users who have an active or scheduled Out-of-Office status.
     Handles pagination to fetch all users and checks settings individually.
     """
-    headers = {"Authorization": f"Bearer {access_token}"}
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "ConsistencyLevel": "eventual"  # Required for advanced filters like 'ne null'
+    }
     all_users = []
     
     # Fetch first page of users 
     # Filtering for 'Member', enabled accounts, and existing mail address to focus on User Mailboxes
-    url = f"{GRAPH_URL}/users?$filter=userType eq 'Member' and accountEnabled eq true and mail ne null&$select=id,displayName,userPrincipalName"
+    # $count=true is also required for these advanced filters
+    url = f"{GRAPH_URL}/users?$filter=userType eq 'Member' and accountEnabled eq true and mail ne null&$select=id,displayName,userPrincipalName&$count=true"
     
     while url:
         response = requests.get(url, headers=headers)
