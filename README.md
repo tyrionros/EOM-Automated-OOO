@@ -39,7 +39,12 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
 3. **Template**: Customize `src/Templates/OOO-Template.html`.
 
 ## Usage
-Run the main script:
+You can run the automation using the provided `run.py` wrapper, which automatically checks and installs dependencies:
+```bash
+python run.py
+```
+
+Alternatively, run the main script directly (ensure dependencies are installed):
 ```bash
 python src/main.py
 ```
