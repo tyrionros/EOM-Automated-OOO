@@ -18,9 +18,11 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
 ## Prerequisites
 - **Python**: 3.8 or higher.
 - **Azure App Registration**:
-  - **Platform**: Add 'Mobile and desktop applications' with redirect URI `http://localhost`.
+  - **Platform**: Click '+ Add a platform', then select **'Mobile and desktop applications'**.
+  - **Redirect URI**: Select `http://localhost`.
+  - **Important**: Do **NOT** use the 'Single-page application' (SPA) platform, as it will cause authentication errors with this script.
   - **Permissions (Delegated)**: `User.Read.All`, `MailboxSettings.ReadWrite`, `Directory.Read.All`.
-  - **Type**: Public Client (No Client Secret required).
+  - **Type**: Ensure 'Allow public client flows' is set to **Yes**.
 
 ## Setup
 1. **Install Dependencies**:
