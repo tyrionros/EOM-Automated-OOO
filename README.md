@@ -7,16 +7,20 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
 - **Template Enforcement**: Replaces user-defined messages with a standardized HTML template.
 - **Manager Details**: Dynamically fetches the user's manager's name and email.
 - **Smart Skipping**: Uses a hidden marker in the HTML to avoid redundant updates.
+- **Exchange Delegation**: Optional flow to add 'Full Access' permissions via PowerShell prior to updating OOO (useful for admin-led updates with delegated tokens).
 
 ## Project Structure
 - `src/main.py`: The entry point for the automation.
 - `src/graph_auth.py`: Authentication logic using MSAL.
 - `src/ooo_logic.py`: Functions for interacting with Microsoft Graph.
+- `src/exchange.py`: Logic for managing mailbox delegation via PowerShell.
 - `src/Templates/`: HTML templates for the OOO messages.
 - `src/Config/settings.json`: Configuration for Tenant ID, App ID, and paths.
 
 ## Prerequisites
 - **Python**: 3.8 or higher.
+- **PowerShell**: `pwsh` (PowerShell Core) recommended for Mac/Linux, or `powershell` for Windows.
+- **Exchange Online Management**: PowerShell module installed (`Install-Module -Name ExchangeOnlineManagement`).
 - **Azure App Registration**:
   - **Platform**: Click '+ Add a platform', then select **'Mobile and desktop applications'**.
   - **Redirect URI**: Select `http://localhost`.
@@ -34,7 +38,9 @@ This project automates the application of a standardized Out-of-Office (OOO) tem
    {
        "TenantId": "YOUR_TENANT_ID",
        "AppId": "YOUR_APP_ID",
-       "TemplatePath": "src/Templates/OOO-Template.html"
+       "TemplatePath": "src/Templates/OOO-Template.html",
+       "UseDelegation": true,
+       "AdminUPN": "admin@yourdomain.com"
    }
    ```
    *Note: No `ClientSecret` is needed for interactive login.*
